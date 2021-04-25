@@ -23,7 +23,7 @@ def create_app(test_config=None):
 
     @app.route('/')
     def index():
-        return "Name of movies will list here"
+        return "Welcome to the cast-it agency"
 
 
 # -----------------------------------
@@ -32,7 +32,8 @@ def create_app(test_config=None):
 
     # Retrieves list of all movies
     @app.route('/movies', methods=['GET'])
-    def get_movies():
+    @requires_auth('get:movies')
+    def get_movies(payload):
         movies = Movie.query.all()
         formatted_movies = [movie.format() for movie in movies]
         return jsonify({
@@ -42,10 +43,11 @@ def create_app(test_config=None):
 
     #Adds a new movie to DB    
     @app.route('/movies', methods=['POST'])
-    def add_movie():
+    @requires_auth('post:movies')
+    def add_movie(payload):
         body = request.get_json()
-        title = body['title']
-        age = body['age']
+        title = body.get('title', None)
+        release_date = body.get('release_date', None)
         # try:
         entry = Movie(title=title, release_date=release_date)
         entry.insert()
@@ -57,7 +59,8 @@ def create_app(test_config=None):
         #     abort(422)      
 
     @app.route('/movies/<int:movie_id>', methods=['PATCH'])
-    def update_movie(movie_id):
+    @requires_auth('patch:movies')
+    def update_movie(payload, movie_id):
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
         try:
             if movie is None:
@@ -77,7 +80,8 @@ def create_app(test_config=None):
 
 
     @app.route('/movies/<int:movie_id>', methods=['DELETE'])
-    def delete_movie(movie_id):
+    @requires_auth('delete:movies')
+    def delete_movie(payload, movie_id):
         movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
         try:
             if movie is None:
@@ -98,7 +102,8 @@ def create_app(test_config=None):
     # Retrives list of all actors
 
     @app.route('/actors', methods=['GET'])
-    def get_actors():
+    @requires_auth('get:actors')
+    def get_actors(payload):
         actors = Actor.query.all()
         formatted_actors = [actor.format() for actor in actors]
         return jsonify({
@@ -107,7 +112,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/actors', methods=['POST'])
-    def add_actor():
+    @requires_auth('post:actors')
+    def add_actor(payload):
         body = request.get_json()
         name = body.get('name', None)
         age = body.get('age', None)
@@ -124,7 +130,8 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route('/actors/<int:actor_id>', methods=['PATCH'])
-    def update_actor(actor_id):
+    @requires_auth('patch:actors')
+    def update_actor(payload, actor_id):
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         try:
             if actor is None:
@@ -144,7 +151,8 @@ def create_app(test_config=None):
 
 
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
-    def delete_actor(actor_id):
+    @requires_auth('delete:actors')
+    def delete_actor(payload, actor_id):
         actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
         try:
             if actor is None:

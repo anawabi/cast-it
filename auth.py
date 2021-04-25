@@ -3,8 +3,8 @@ from flask import request, _request_ctx_stack
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
-from dotenv import load_dotenv, find_dotenv
-from authlib.integrations.flask_client import OAuth
+# from dotenv import load_dotenv, find_dotenv
+# from authlib.integrations.flask_client import OAuth
 from six.moves.urllib.parse import urlencode
 
 
