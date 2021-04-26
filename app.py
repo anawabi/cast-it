@@ -21,9 +21,9 @@ def create_app(test_config=None):
 # Endpoints
 # -------------------------------------------------------------
 
-    @app.route('/')
-    def index():
-        return "Welcome to the cast-it agency"
+    # @app.route('/')
+    # def index():
+    #     return "Welcome to the cast-it agency"
 
 
 # -----------------------------------
