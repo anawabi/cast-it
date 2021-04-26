@@ -8,11 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 # from app import db
 import json
 
-# database_name = "cast-it"
-# database_path = os.environ['DATABASE_URL']
-
-database_name = "cast-it"
-database_path = "postgresql://{}:{}@{}/{}".format('amann', 'zaq1@WSX', 'localhost:5432', database_name)
+database_path = os.environ['DATABASE_URL']
 db = SQLAlchemy()
 
 '''
@@ -27,8 +23,11 @@ def setup_db(app, database_path=database_path):
     db.create_all()
 
 
+#-----------------------------------------------------
+# Association Table
+# ------------------------------------------------------
 
-actor_rel = db.Table('actor_rel',
+actor_movie_rel = db.Table('actor_movie_rel',
     db.Column('movie_id', db.Integer, db.ForeignKey('movies.id'), primary_key=True),
     db.Column('actor_id', db.Integer, db.ForeignKey('actors.id'), primary_key=True)
 )
@@ -42,7 +41,7 @@ class Movie(db.Model):
   id = Column(Integer, primary_key=True)
   title = Column(String)
   release_date = Column(String)
-  actors = db.relationship('Actor', secondary=actor_rel, cascade = "all,delete", backref='movie',lazy='dynamic')
+  actors = db.relationship('Actor', secondary=actor_movie_rel, cascade = "all,delete", backref='movie',lazy='dynamic')
  
 
   def __init__(self, title, release_date):
